@@ -1,0 +1,41 @@
+#2.设置时区为上海
+#RUN timedatectl set-timezone Asia/Shanghai
+
+#4 基础python开发包及安装python-dev
+RUN yum groupinstall -y "Development tools"  
+RUN yum install -y  wget git psmisc gcc make vim  htop net-tools
+RUN yum install -y zlib-devel bzip2-devel
+RUN yum install -y  python-devel python-gevent
+RUN yum install -y gcc gcc-c++ glibc make autoconf openssl openssl-devel
+
+#安装netstat 和 ifconfig命令
+yum -y install python-pip
+pip install --upgrade pip  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+#3.安装虚拟环境
+#pip install virtualenv -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+#3.安装django flask sqlalchemy numpy
+pip install uwsgi   -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+pip install -r /opt/weekly/weekly_system/weekly/requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+#安装redis
+yum install -y redis
+systemctl enable redis
+systemctl start redis
+
+#安装postgresql
+yum -y install postgresql postgresql-libs postgresql-server
+#初始化
+postgresql-setup initdb
+systemctl enable postgresql
+systemctl start postgresql
+mkdir /home/admin/backup/
+mkdir /home/admin/sh/
+
+
+
+#WORKDIR /usr/local/src/nginx-1.12.2
+
+# execute command to compile nginx
+#RUN ./configure --user=nginx --group=nginx --prefix=/usr/local/nginx --with-file-aio --with-http_ssl_module --with-http_realip_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-http_secure_link_module --with-http_degradation_module --with-http_stub_status_module && make && make install
